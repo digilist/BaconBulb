@@ -4,10 +4,11 @@ class DrawableContainer(sf.Drawable):
     def __init__(self):
         sf.Drawable.__init__(self)
         self._container = []
+        self.position = (0, 0)
 
     def add_element(self, element, position = None):
         if(position == None):
-            position = (0, 0)
+            position = element.position
 
         self._container.append({
             "element": element,

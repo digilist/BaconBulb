@@ -78,17 +78,21 @@ class GameEngine():
 
     """ Display the House with all Windows """
     def _display_house(self):
+        house_container = DrawableContainer()
+
         houseWidth = self._columns * (self._windowWidth + self._borderWeight) + self._borderWeight
         houseHeight = self._rows * (self._windowHeight + self._borderWeight) + self._borderWeight
 
         house = sf.RectangleShape()
         house.size = sf.Vector2(houseWidth, houseHeight)
         house.fill_color = sf.Color.GREEN
-        self._window.draw(house)
+        house_container.add_element(house)
 
         for x in range (0, self._columns):
             for y in range (0, self._rows):
-                self._window.draw(self._windows[x][y]["window"])
+                house_container.add_element(self._windows[x][y]["window"])
+
+        self._window.draw(house_container)
 
     """ Display the meter, which shows the counter """
     def _display_meter(self):
@@ -145,12 +149,12 @@ class GameEngine():
     def _create_animated_window(self):
         animation = Animation()
 
-        for i in range(255, 0, -50):
+        for i in range(255, 0, -25):
             w = sf.RectangleShape()
             w.size = sf.Vector2(self._windowWidth, self._windowHeight)
             w.fill_color = sf.Color(255, 255, i)
             
-            animation.add_frame(100, w)
+            animation.add_frame(200, w)
 
         last_frame = animation.get_frame(animation.get_number_of_frames() - 1)
         last_frame["timer"] = 2000
