@@ -22,7 +22,7 @@ class GameMenu():
 
     def handle_events(self):
         for event in self._window.events:
-            #self._event_listener.listen_for_event(event)
+            self._event_listener.listen_for_event(event)
             self._close_listener(event)
 
     def show_splash(self):

@@ -14,10 +14,10 @@ class Splash():
         self._startbutton = Button(sf.Vector2((self._window.size[0]-200)/2,200), #position
                                    sf.Vector2(150,20),  #size
                                    sf.Color.GREEN,      #background color
-                                   sf.Color.RED,        #outline color
                                    sf.Color.BLACK,      #text color
+                                   sf.Color.RED,        #outline color
                                    2,                   #outline thickness
-                                   "Startstart",        #lable
+                                   "Start Game",        #lable
                                    self._font,          #font
                                    17)                  #text size
         self._menubuttons.append(self._startbutton)
@@ -26,14 +26,25 @@ class Splash():
         self._highscorebutton = Button(sf.Vector2((self._window.size[0]-200)/2,250), #position
                                        sf.Vector2(150,20),  #size
                                        sf.Color.GREEN,      #background color
-                                       sf.Color.RED,        #outline color
                                        sf.Color.BLACK,      #text color
+                                       sf.Color.RED,        #outline color
                                        2,                   #outline thickness
-                                       "StartsGame",        #lable
+                                       "Highscore",         #lable
                                        self._font,          #font
                                        17)                  #text size
         self._menubuttons.append(self._highscorebutton)
 
+        #quitbutton
+        self._quitbutton = Button(sf.Vector2((self._window.size[0]-200)/2,300), #position
+                                  sf.Vector2(150,20),  #size
+                                  sf.Color.GREEN,      #background color
+                                  sf.Color.BLACK,      #text color
+                                  sf.Color.RED,        #outline color
+                                  2,                   #outline thickness
+                                  "Quit",              #lable
+                                  self._font,          #font
+                                  17)                  #text size
+        self._menubuttons.append(self._quitbutton)
 
 
 
@@ -52,7 +63,6 @@ class Splash():
         self._window.draw(self._titel)
         for b in self._menubuttons:
             self._window.draw(b)
-            print(b._text.string)
 
         
     def listen_for_event(self, event):
@@ -66,22 +76,18 @@ class Splash():
     def mouse_listener(self, event):
         if type(event) is sf.MouseButtonEvent and event.pressed and sf.Mouse.is_button_pressed(sf.Mouse.LEFT):
             mouse_pos = sf.Mouse.get_position(self._window)
-            #startbutton
-            if self._startbutton.contains(mouse_pos):
-                self._startbutton.bgcolor(sf.Color.RED)
-            #highscorebutton
-            if self._highscorebutton.contains(mouse_pos):
-                self._highscorebutton.bgcolor(sf.Color.RED)
+            for b in self._menubuttons:
+              if b.contains(mouse_pos):
+                b.bgcolor(sf.Color.RED)
+        
         if type(event) is sf.MouseButtonEvent and event.released:
             mouse_pos = sf.Mouse.get_position(self._window)
             #startbutton
             if self._startbutton.contains(mouse_pos):
-                self._startbutton.bgcolor(sf.Color.GREEN)
-                self._game_menu.start_game()
-            #highscorebutton
-            if self._highscorebutton.contains(mouse_pos):
-                self._highscorebutton.color(sf.Color.GREEN)
-                
+              self._game_menu.start_game()
+            #quitbutton
+            if self._quitbutton.contains(mouse_pos):
+              self._game_menu.close()    
         if type(event) is sf.MouseButtonEvent and event.released:
-            self._startbutton.bgcolor(sf.Color.GREEN)
-            self._highscorebutton.bgcolor(sf.Color.GREEN)
+            for b in self._menubuttons:
+              b.bgcolor(sf.Color.GREEN)
