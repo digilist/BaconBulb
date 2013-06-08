@@ -52,10 +52,9 @@ class Splash():
         self._window.draw(self._titel)
         for b in self._menubuttons:
             self._window.draw(b)
-            print(b._text.string)
+            #print(b._text.string)
 
         
-
     def listen_for_event(self, event):
         self.space_listener(event)
         self.mouse_listener(event)
@@ -84,5 +83,5 @@ class Splash():
                 self._highscorebutton.color(sf.Color.GREEN)
                 
         if type(event) is sf.MouseButtonEvent and event.released:
-                self._startbutton.bgcolor(sf.Color.GREEN)
-                self._highscorebutton.bgcolor(sf.Color.GREEN)
+            self._startbutton.bgcolor(sf.Color.GREEN)
+            self._highscorebutton.bgcolor(sf.Color.GREEN)
