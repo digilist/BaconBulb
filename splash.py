@@ -57,7 +57,6 @@ class Splash():
         self._window.draw(self._high)
         self._window.draw(self._hightext)
         
-
     def listen_for_event(self, event):
         self.space_listener(event)
         self.mouse_listener(event)

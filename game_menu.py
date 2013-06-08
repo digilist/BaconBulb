@@ -23,11 +23,7 @@ class GameMenu():
     def handle_events(self):
         for event in self._window.events:
             self._event_listener.listen_for_event(event)
-            self.close_listener(event)
-
-    def close_listener(self, event):
-        if type(event) is sf.CloseEvent:
-            self.close()
+            self._close_listener(event)
 
     def show_splash(self):
         self._current_screen = "splash"
@@ -39,3 +35,7 @@ class GameMenu():
 
     def close(self):
         self._window.close()
+
+    def _close_listener(self, event):
+        if type(event) is sf.CloseEvent:
+            self.close()

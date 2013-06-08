@@ -15,7 +15,6 @@ class Startup():
         self._game_menu = GameMenu(self._window)
 
     def run(self):
-        self._meter = Meter(self._window);
         while self._window.is_open:
             self.loop()
 
@@ -23,7 +22,6 @@ class Startup():
         self._window.clear(sf.Color.BLACK)
         self._game_menu.dispatch()
         self._game_menu.handle_events()
-        #self._meter.incr()
         self._window.display()
 
 Startup().run()
