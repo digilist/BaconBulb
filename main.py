@@ -21,9 +21,9 @@ class Startup():
 
     def loop(self):
         self._window.clear(sf.Color.BLACK)
-        #self._game_menu.dispatch()
+        self._game_menu.dispatch()
         self._game_menu.handle_events()
-        self._meter.incr()
+        #self._meter.incr()
         self._window.display()
 
 Startup().run()
