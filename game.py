@@ -34,9 +34,11 @@ class GameEngine():
         self._frame_count = 0
         self._window_on_count = 50
 
-        self._window_list = [[False for y in range(10)] for x in range(5)]
-
-        self._init_windows()
+        self._windows = {}
+        for x in range (0, 5):
+            self._windows[x] = {}
+            for y in range (0, 10):
+                self._fetch_window(x, y, False)
 
     def loop(self):
         self._turn_on_lights()
@@ -48,12 +50,11 @@ class GameEngine():
             OffWindows = []
             for x in range (0, 5):
                 for y in range (0, 10):
-                    if not self._window_list[x][y]:
+                    if not self._windows[x][y]["status"]:
                         OffWindows.append([x, y])
             target = OffWindows.pop(random.randint(0, len(OffWindows) - 1))
             x, y = target[0], target[1]
-            self._window_list[x][y] = True
-            self._fetch_window(x, y)
+            self._fetch_window(x, y, True)
 
 
         if (self._frame_count % settings.speedIncrement == 0):
@@ -69,7 +70,7 @@ class GameEngine():
 
         for x in range (0, 5):
             for y in range (0, 10):
-                self._window.draw(self._windows[x][y])
+                self._window.draw(self._windows[x][y]["window"])
 
     def _display_meter(self):
         self._meter_view.draw(self._points)
@@ -78,7 +79,7 @@ class GameEngine():
         end = True
         for x in range (5):
             for y in range (10):
-                end = end and self._window_list[x][y]
+                end = end and self._windows[x][y]["status"]
 
         return end
 
@@ -87,29 +88,25 @@ class GameEngine():
             for x in range (5):
                 for y in range (10):
                     if event.position.x > x*60+10 and event.position.x < x*60+60 and event.position.y > y*60+10 and event.position.y < y*60+60:
-                        if self._window_list[x][y]:
+                        if self._windows[x][y]["status"]:
                             self._points += 1
-                            self._window_list[x][y] = False
-                            self._fetch_window(x, y)
+                            self._fetch_window(x, y, False)
 
-    def _init_windows(self):
-        self._windows = {}
-        for x in range (0, 5):
-            self._windows[x] = {}
-            for y in range (0, 10):
-                self._fetch_window(x, y)
-
-    def _fetch_window(self, x, y):
-        if self._window_list[x][y]:
+    def _fetch_window(self, x, y, turnedOn):
+        if turnedOn:
             window = self._get_animated_window()
         else:
             window = sf.RectangleShape()
             window.size = sf.Vector2(50, 50)
             window.fill_color = sf.Color.BLACK
+            turnedOn = False
 
         window.position = sf.Vector2(x*60 + 10, y*60 + 10)
 
-        self._windows[x][y] = window
+        self._windows[x][y] = {
+            "window": window,
+            "status": turnedOn
+        }
 
     def _get_animated_window(self):
 
