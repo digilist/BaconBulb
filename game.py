@@ -31,6 +31,12 @@ class GameEngine():
 
     def __init__(self, window):
         self._window = window
+        self._columns = 10
+        self._rows = 10
+        self._windowWidth = 50
+        self._windowHeight = 50
+        self._borderWeight = 10;
+
         self.reset()
         
     def reset(self):
@@ -43,9 +49,9 @@ class GameEngine():
         self._monster_texture = sf.Texture.from_file("assets/monster.png")
 
         self._windows = {} # contains all windows with their current status
-        for x in range (0, 5):
+        for x in range (0, self._columns):
             self._windows[x] = {}
-            for y in range (0, 10):
+            for y in range (0, self._rows):
                 self._create_window(x, y, False)
 
     def loop(self):
@@ -57,8 +63,8 @@ class GameEngine():
     def _turn_on_light(self):
         if (self._frame_count % self._window_on_count == 0):
             OffWindows = []
-            for x in range (0, 5):
-                for y in range (0, 10):
+            for x in range (0, self._columns):
+                for y in range (0, self._rows):
                     if not self._windows[x][y]["status"]:
                         OffWindows.append([x, y])
             target = OffWindows.pop(random.randint(0, len(OffWindows) - 1))
@@ -72,13 +78,16 @@ class GameEngine():
 
     """ Display the House with all Windows """
     def _display_house(self):
+        houseWidth = self._columns * (self._windowWidth + self._borderWeight) + self._borderWeight
+        houseHeight = self._rows * (self._windowHeight + self._borderWeight) + self._borderWeight
+
         house = sf.RectangleShape()
-        house.size = sf.Vector2(310, 610)
+        house.size = sf.Vector2(houseWidth, houseHeight)
         house.fill_color = sf.Color.GREEN
         self._window.draw(house)
 
-        for x in range (0, 5):
-            for y in range (0, 10):
+        for x in range (0, self._columns):
+            for y in range (0, self._rows):
                 self._window.draw(self._windows[x][y]["window"])
 
     """ Display the meter, which shows the counter """
@@ -88,18 +97,17 @@ class GameEngine():
     """ Check, whether the game is over """
     def _check_end(self):
         end = True
-        for x in range (5):
-            for y in range (10):
+        for x in range (0, self._columns):
+            for y in range (0, self._rows):
                 end = end and self._windows[x][y]["status"]
 
         return end
     """ Listen for the clicks on windows """
     def _click_listener(self, event):
         if type(event) is sf.MouseButtonEvent and event.pressed is True and event.button is sf.Mouse.LEFT:
-            for x in range (5):
-                for y in range (10):
-                    if event.position.x > x*60+10 and event.position.x < x*60+60 and event.position.y > y*60+10 and event.position.y < y*60+60:
-                        if self._windows[x][y]["status"]:
+            for x in range (0, self._columns):
+                for y in range (0, self._rows):
+                    if self._is_mouse_in_window(event, x, y) and self._windows[x][y]["status"]:
                             self._lightblub_clicked(x, y)
 
     """ is called, when die lighbulb on the given coordinates is clicked """
@@ -119,11 +127,13 @@ class GameEngine():
             window = self._create_animated_window()
         else:
             window = sf.RectangleShape()
-            window.size = sf.Vector2(50, 50)
+            window.size = sf.Vector2(self._windowWidth, self._windowHeight)
             window.fill_color = sf.Color.BLACK
             turnedOn = False
 
-        window.position = sf.Vector2(x*60 + 10, y*60 + 10)
+        pX = x * (self._windowWidth + self._borderWeight) + self._borderWeight
+        pY = y * (self._windowHeight + self._borderWeight) + self._borderWeight
+        window.position = sf.Vector2(pX, pY)
 
         self._windows[x][y] = {
             "window": window,
@@ -137,7 +147,7 @@ class GameEngine():
 
         for i in range(255, 0, -50):
             w = sf.RectangleShape()
-            w.size = sf.Vector2(50, 50)
+            w.size = sf.Vector2(self._windowWidth, self._windowHeight)
             w.fill_color = sf.Color(255, 255, i)
             
             animation.add_frame(100, w)
@@ -160,6 +170,15 @@ class GameEngine():
 
         return animation
 
+        #event.position.x > x *60+10 and event.position.x < x*60+60 and event.position.y > y*60+10 and event.position.y < y*60+60:
+
+    def _is_mouse_in_window(self, event, x, y):
+        result = event.position.x > x * (self._windowWidth + self._borderWeight) + self._borderWeight
+        result = result and event.position.x < (x+1) * (self._windowWidth + self._borderWeight)
+        result = result and event.position.y > y * (self._windowHeight + self._borderWeight) + self._borderWeight
+        result = result and event.position.y < (y+1) * (self._windowHeight + self._borderWeight)
+
+        return result
 
 class MeterView():
 
