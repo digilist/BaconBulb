@@ -36,7 +36,8 @@ class GameEngine():
         self._rows = 10
         self._windowWidth = 30
         self._windowHeight = 30
-        self._borderWeight = 5;
+        self._borderWeight = 2;
+        self._houseColor = sf.Color(50, 50, 50)
 
         house_size = self._get_house_size()
 
@@ -92,7 +93,7 @@ class GameEngine():
 
         house = sf.RectangleShape()
         house.size = sf.Vector2(house_size[0], house_size[1])
-        house.fill_color = sf.Color.GREEN
+        house.fill_color = self._houseColor
         house_container.add_element(house)
 
         for x in range (0, self._columns):
@@ -161,7 +162,7 @@ class GameEngine():
         else:
             window = sf.RectangleShape()
             window.size = sf.Vector2(self._windowWidth, self._windowHeight)
-            window.fill_color = sf.Color.BLACK
+            window.fill_color = self._houseColor
             turnedOn = False
 
         pX = x * (self._windowWidth + self._borderWeight) + self._borderWeight
