@@ -80,7 +80,7 @@ class Splash():
               if b.contains(mouse_pos):
                 b.bgcolor(sf.Color.RED)
         
-        if type(event) is sf.MouseButtonEvent and event.released:
+        if type(event) is sf.MouseButtonEvent and event.released and event.button == sf.Mouse.LEFT:
             mouse_pos = sf.Mouse.get_position(self._window)
             #startbutton
             if self._startbutton.contains(mouse_pos):
