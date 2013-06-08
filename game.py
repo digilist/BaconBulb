@@ -144,19 +144,19 @@ class GameEngine():
 
         last_frame = animation.get_frame(animation.get_number_of_frames() - 1)
         last_frame["timer"] = 2000
-
-        monster = sf.Sprite(self._monster_texture)
-        monster.texture_rectangle = sf.Rectangle((0, 0), (self._monster_texture.width, self._monster_texture.height))
-
-        container = DrawableContainer()
-        container.add_element(last_frame["canvas"])
-        container.add_element(monster, (8, 10))
-
+        
         rand = random.random() * 100
-
         if(rand < 30): # in 30% of windows show the monster
-            animation.add_frame(1000, container)
-        animation.add_frame(1000, last_frame["canvas"]) # and disappear
+
+            monster = sf.Sprite(self._monster_texture)
+            monster.texture_rectangle = sf.Rectangle((0, 0), (self._monster_texture.width, self._monster_texture.height))
+
+            container = DrawableContainer()
+            container.add_element(last_frame["canvas"])
+            container.add_element(monster, (8, 10))
+
+            animation.add_frame(round(500 + random.random() * 1500), container)
+            animation.add_frame(1000, last_frame["canvas"]) # and disappear
 
         return animation
 
