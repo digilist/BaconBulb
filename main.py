@@ -9,7 +9,7 @@ import settings;
 class Startup():
 
     def __init__(self):
-        self._window = sf.RenderWindow(sf.VideoMode(settings.windowWidth, settings.windowHeight), "pySFML Window")
+        self._window = sf.RenderWindow(sf.VideoMode(settings.windowWidth, settings.windowHeight), "BaconBulb")
         self._game_menu = GameMenu(self._window)
 
     def run(self):
