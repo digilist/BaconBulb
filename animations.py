@@ -12,11 +12,17 @@ class Animation(sf.Drawable):
         self._current_frame = 0
         self._timer = None # contains last frame time
 
-    def addFrame(self, timer, canvas):
+    def add_frame(self, timer, canvas):
         self._frames.append({
             "timer": timer,
             "canvas": canvas
         })
+
+    def get_current_frame(self):
+        return self._current_frame
+
+    def get_number_of_frames(self):
+        return len(self._frames)
 
     def draw(self, target, states):
         current_frame = self._frames[self._current_frame];

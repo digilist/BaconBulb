@@ -2,6 +2,7 @@ import sfml as sf
 import random
 import settings
 from animations import Animation
+from datetime import datetime
 
 class Game():
 
@@ -14,6 +15,7 @@ class Game():
         self._game_engine.loop()
 
         if self._game_engine._check_end():
+            self._game_engine.reset()
             self._game_menu.show_splash() # later show highscore
 
     def listen_for_event(self, event):
@@ -28,24 +30,28 @@ class GameEngine():
 
     def __init__(self, window):
         self._window = window
-        self._meter_view = MeterView(window)
+        self.reset()
+        
+    def reset(self):
+        self._meter_view = MeterView(self._window)
         self._points = 0
 
         self._frame_count = 0
         self._window_on_count = 50
 
-        self._windows = {}
+        self._windows = {} # contains all windows with their current status
         for x in range (0, 5):
             self._windows[x] = {}
             for y in range (0, 10):
-                self._fetch_window(x, y, False)
+                self._create_window(x, y, False)
 
     def loop(self):
-        self._turn_on_lights()
+        self._turn_on_light()
         self._display_house()
         self._display_meter()
 
-    def _turn_on_lights(self):
+    """ Turn on the next bulb """
+    def _turn_on_light(self):
         if (self._frame_count % self._window_on_count == 0):
             OffWindows = []
             for x in range (0, 5):
@@ -54,14 +60,14 @@ class GameEngine():
                         OffWindows.append([x, y])
             target = OffWindows.pop(random.randint(0, len(OffWindows) - 1))
             x, y = target[0], target[1]
-            self._fetch_window(x, y, True)
-
+            self._create_window(x, y, True)
 
         if (self._frame_count % settings.speedIncrement == 0):
             self._window_on_count = self._window_on_count - 1 if self._window_on_count > 1 else 1
 
         self._frame_count += 1
 
+    """ Display the House with all Windows """
     def _display_house(self):
         house = sf.RectangleShape()
         house.size = sf.Vector2(310, 610)
@@ -72,9 +78,11 @@ class GameEngine():
             for y in range (0, 10):
                 self._window.draw(self._windows[x][y]["window"])
 
+    """ Display the meter, which shows the counter """
     def _display_meter(self):
         self._meter_view.draw(self._points)
 
+    """ Check, whether the game is over """
     def _check_end(self):
         end = True
         for x in range (5):
@@ -82,19 +90,30 @@ class GameEngine():
                 end = end and self._windows[x][y]["status"]
 
         return end
-
+    """ Listen for the clicks on windows """
     def _click_listener(self, event):
         if type(event) is sf.MouseButtonEvent and event.pressed is True and event.button is sf.Mouse.LEFT:
             for x in range (5):
                 for y in range (10):
                     if event.position.x > x*60+10 and event.position.x < x*60+60 and event.position.y > y*60+10 and event.position.y < y*60+60:
                         if self._windows[x][y]["status"]:
-                            self._points += 1
-                            self._fetch_window(x, y, False)
+                            self._lightblub_clicked(x, y)
 
-    def _fetch_window(self, x, y, turnedOn):
+    def _lightblub_clicked(self, x, y):
+        # calculate points
+        diff =  datetime.now() - self._windows[x][y]["create_time"]
+        diff = round(((diff.seconds * 1000) + (diff.microseconds / 1000)) / 100) # in microseconds
+
+        points = max(5, 50 - diff) # between 10 and 50 points
+        print(points);
+
+        self._points += points
+        self._create_window(x, y, False)
+
+    """ create a new Window on the given coordinates """
+    def _create_window(self, x, y, turnedOn):
         if turnedOn:
-            window = self._get_animated_window()
+            window = self._create_animated_window()
         else:
             window = sf.RectangleShape()
             window.size = sf.Vector2(50, 50)
@@ -105,16 +124,12 @@ class GameEngine():
 
         self._windows[x][y] = {
             "window": window,
-            "status": turnedOn
+            "status": turnedOn,
+            "create_time": datetime.now()
         }
 
-    def _get_animated_window(self):
-
-        #window = sf.RectangleShape()
-        #window.size = sf.Vector2(50, 50)
-        #window.fill_color = sf.Color.RED
-        #return window
-
+    """ creates a animated window, which appears when the light was turned on """
+    def _create_animated_window(self):
         animation = Animation()
 
         for i in range(255, 0, -50):
@@ -122,7 +137,7 @@ class GameEngine():
             w.size = sf.Vector2(50, 50)
             w.fill_color = sf.Color(255, 255, i)
             
-            animation.addFrame(100, w)
+            animation.add_frame(100, w)
 
         return animation
 
