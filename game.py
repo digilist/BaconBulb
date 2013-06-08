@@ -1,6 +1,7 @@
 import sfml as sf
 import random
 import settings
+from animations import Animation
 
 class Game():
 
@@ -35,6 +36,8 @@ class GameEngine():
 
         self._window_list = [[False for y in range(10)] for x in range(5)]
 
+        self._init_windows()
+
     def loop(self):
         self._turn_on_lights()
         self._display_house()
@@ -48,7 +51,9 @@ class GameEngine():
                     if not self._window_list[x][y]:
                         OffWindows.append([x, y])
             target = OffWindows.pop(random.randint(0, len(OffWindows) - 1))
-            self._window_list[target[0]][target[1]] = True
+            x, y = target[0], target[1]
+            self._window_list[x][y] = True
+            self._fetch_window(x, y)
 
 
         if (self._frame_count % settings.speedIncrement == 0):
@@ -64,11 +69,7 @@ class GameEngine():
 
         for x in range (0, 5):
             for y in range (0, 10):
-                rect = sf.RectangleShape()
-                rect.size = sf.Vector2(50, 50)
-                rect.fill_color = sf.Color.YELLOW if self._window_list[x][y] else sf.Color.BLACK
-                rect.position = sf.Vector2(x*60 + 10, y*60 + 10)
-                self._window.draw(rect)
+                self._window.draw(self._windows[x][y])
 
     def _display_meter(self):
         self._meter_view.draw(self._points)
@@ -89,6 +90,44 @@ class GameEngine():
                         if self._window_list[x][y]:
                             self._points += 1
                             self._window_list[x][y] = False
+                            self._fetch_window(x, y)
+
+    def _init_windows(self):
+        self._windows = {}
+        for x in range (0, 5):
+            self._windows[x] = {}
+            for y in range (0, 10):
+                self._fetch_window(x, y)
+
+    def _fetch_window(self, x, y):
+        if self._window_list[x][y]:
+            window = self._get_animated_window()
+        else:
+            window = sf.RectangleShape()
+            window.size = sf.Vector2(50, 50)
+            window.fill_color = sf.Color.BLACK
+
+        window.position = sf.Vector2(x*60 + 10, y*60 + 10)
+
+        self._windows[x][y] = window
+
+    def _get_animated_window(self):
+
+        #window = sf.RectangleShape()
+        #window.size = sf.Vector2(50, 50)
+        #window.fill_color = sf.Color.RED
+        #return window
+
+        animation = Animation()
+
+        for i in range(255, 0, -50):
+            w = sf.RectangleShape()
+            w.size = sf.Vector2(50, 50)
+            w.fill_color = sf.Color(255, 255, i)
+            
+            animation.addFrame(100, w)
+
+        return animation
 
 
 class MeterView():
