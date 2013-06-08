@@ -18,7 +18,11 @@ class DrawableContainer(sf.Drawable):
     def draw(self, target, states):
         for e in self._container:
             element = e["element"]
+
+            old_position = element.position
             element.position = self.position
             element.position += e["position"]
 
             target.draw(element, states)
+
+            element.position = old_position

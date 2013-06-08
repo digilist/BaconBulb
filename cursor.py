@@ -2,10 +2,6 @@
 
 import sfml as sf
 
-# load cursor icon
-texture = sf.Texture.from_file("assets/cursor.png")
-cursorIcon = sf.Sprite(texture)
-
 class Cursor(sf.Drawable):
     def __init__(self, window):
         self._window = window
@@ -20,4 +16,3 @@ class Cursor(sf.Drawable):
     def draw(self, target, states):
         target.draw(self._icon, states)
 
-    
