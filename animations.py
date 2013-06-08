@@ -1,5 +1,4 @@
 import sfml as sf
-import settings
 from datetime import datetime
 
 class Animation(sf.Drawable):
@@ -12,17 +11,25 @@ class Animation(sf.Drawable):
         self._current_frame = 0
         self._timer = None # contains last frame time
 
-    def addFrame(self, timer, canvas):
+    def add_frame(self, timer, canvas):
         self._frames.append({
             "timer": timer,
             "canvas": canvas
         })
 
+    def get_current_frame(self):
+        return self._current_frame
+
+    def get_number_of_frames(self):
+        return len(self._frames)
+
+    def get_frame(self, frame):
+        return self._frames[frame]
+
     def draw(self, target, states):
-        current_frame = self._frames[self._current_frame];
+        current_frame = self.get_frame(self._current_frame)
         current_frame["canvas"].position = self.position
 
-        test = sf.Text("BaconBulb", settings.font, 50)
         target.draw(current_frame["canvas"], states)
 
         if(self._timer == None):
