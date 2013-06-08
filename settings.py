@@ -5,5 +5,7 @@ windowHeight = 610
 
 speedIncrement = 100
 
-font = sf.Font.from_file("Ubuntu-R.ttf")
+defaultFont = sf.Font.from_file("Ubuntu-R.ttf")
 monospaceFont = sf.Font.from_file("DroidSansMono.ttf")
+
+monsterTexture = sf.Texture.from_file("assets/monster.png")

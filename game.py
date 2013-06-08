@@ -3,6 +3,7 @@ import random
 import settings
 from animations import Animation
 from datetime import datetime
+from drawable_container import DrawableContainer
 
 class Game():
 
@@ -38,6 +39,8 @@ class GameEngine():
 
         self._frame_count = 0
         self._window_on_count = 50
+
+        self._monster_texture = sf.Texture.from_file("assets/monster.png")
 
         self._windows = {} # contains all windows with their current status
         for x in range (0, 5):
@@ -99,13 +102,13 @@ class GameEngine():
                         if self._windows[x][y]["status"]:
                             self._lightblub_clicked(x, y)
 
+    """ is called, when die lighbulb on the given coordinates is clicked """
     def _lightblub_clicked(self, x, y):
         # calculate points
         diff =  datetime.now() - self._windows[x][y]["create_time"]
         diff = round(((diff.seconds * 1000) + (diff.microseconds / 1000)) / 100) # in microseconds
 
         points = max(5, 50 - diff) # between 10 and 50 points
-        print(points);
 
         self._points += points
         self._create_window(x, y, False)
@@ -138,6 +141,22 @@ class GameEngine():
             w.fill_color = sf.Color(255, 255, i)
             
             animation.add_frame(100, w)
+
+        last_frame = animation.get_frame(animation.get_number_of_frames() - 1)
+        last_frame["timer"] = 2000
+
+        monster = sf.Sprite(self._monster_texture)
+        monster.texture_rectangle = sf.Rectangle((0, 0), (self._monster_texture.width, self._monster_texture.height))
+
+        container = DrawableContainer()
+        container.add_element(last_frame["canvas"])
+        container.add_element(monster, (8, 10))
+
+        rand = random.random() * 100
+
+        if(rand < 30): # in 30% of windows show the monster
+            animation.add_frame(1000, container)
+        animation.add_frame(1000, last_frame["canvas"]) # and disappear
 
         return animation
 
