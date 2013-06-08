@@ -4,8 +4,10 @@ import sfml as sf
 
 class Cursor(sf.Drawable):
     def __init__(self, window):
+        texture = sf.Texture.from_file("assets/cursor.png")
+        
         self._window = window
-        self._icon = cursorIcon
+        self._icon = sf.Sprite(texture)
 
     def setPosition(self,pos):
         self._icon.position = pos -(14,16)
