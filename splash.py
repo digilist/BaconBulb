@@ -1,4 +1,5 @@
 import sfml as sf
+from button import Button
 
 class Splash():
 
@@ -8,35 +9,32 @@ class Splash():
         self._font = sf.Font.from_file("DroidSansMono.ttf")
         self._titel = sf.Text("BaconBulb", self._font, 50)
 
+        self._menubuttons = []
         #startbutton
-        self._startposition = sf.system.Vector2(350,200)
-        self._startsize = sf.system.Vector2(100,20)
-        self._start = sf.RectangleShape()
-        self._start.size = self._startsize
-        self._start.fill_color = sf.Color.GREEN
-        self._start.outline_color = sf.Color.RED
-        self._start.outline_thickness = 2
-        self._start.position = self._startposition
-        self._startfield = sf.Rectangle(self._startposition, self._startsize)
-        self._starttext = sf.Text("Start Game", self._font, 17)
-        self._starttext.position = self._startposition
-        self._starttext.color = sf.Color.BLACK
-        self._starttext.style =sf.Text.BOLD
+        self._startbutton = Button(sf.Vector2((self._window.size[0]-200)/2,200), #position
+                                   sf.Vector2(150,20),  #size
+                                   sf.Color.GREEN,      #background color
+                                   sf.Color.RED,        #outline color
+                                   sf.Color.BLACK,      #text color
+                                   2,                   #outline thickness
+                                   "Startstart",        #lable
+                                   self._font,          #font
+                                   17)                  #text size
+        self._menubuttons.append(self._startbutton)
 
         #highscorebutton
-        self._highposition = sf.system.Vector2(350,250)
-        self._highsize = sf.system.Vector2(100,20)
-        self._high = sf.RectangleShape()
-        self._high.size = self._highsize
-        self._high.fill_color = sf.Color.GREEN
-        self._high.outline_color = sf.Color.RED
-        self._high.outline_thickness = 2
-        self._high.position = self._highposition
-        self._highfield = sf.Rectangle(self._highposition, self._highsize)
-        self._hightext = sf.Text("Highscore", self._font, 17)
-        self._hightext.position = self._highposition
-        self._hightext.color = sf.Color.BLACK
-        self._hightext.style =sf.Text.BOLD
+        self._highscorebutton = Button(sf.Vector2((self._window.size[0]-200)/2,250), #position
+                                       sf.Vector2(150,20),  #size
+                                       sf.Color.GREEN,      #background color
+                                       sf.Color.RED,        #outline color
+                                       sf.Color.BLACK,      #text color
+                                       2,                   #outline thickness
+                                       "StartsGame",        #lable
+                                       self._font,          #font
+                                       17)                  #text size
+        self._menubuttons.append(self._highscorebutton)
+
+
 
 
         #background
@@ -52,10 +50,10 @@ class Splash():
         self._hausplace = self._hausplace % 800
         self._window.draw(self._haus)
         self._window.draw(self._titel)
-        self._window.draw(self._start)
-        self._window.draw(self._starttext)
-        self._window.draw(self._high)
-        self._window.draw(self._hightext)
+        for b in self._menubuttons:
+            self._window.draw(b)
+            print(b._text.string)
+
         
 
     def listen_for_event(self, event):
@@ -70,21 +68,21 @@ class Splash():
         if type(event) is sf.MouseButtonEvent and event.pressed and sf.Mouse.is_button_pressed(sf.Mouse.LEFT):
             mouse_pos = sf.Mouse.get_position(self._window)
             #startbutton
-            if self._startfield.contains(mouse_pos):
-                self._start.fill_color = sf.Color.RED
+            if self._startbutton.contains(mouse_pos):
+                self._startbutton.bgcolor(sf.Color.RED)
             #highscorebutton
-            if self._highfield.contains(mouse_pos):
-                self._high.fill_color = sf.Color.RED
+            if self._highscorebutton.contains(mouse_pos):
+                self._highscorebutton.bgcolor(sf.Color.RED)
         if type(event) is sf.MouseButtonEvent and event.released:
             mouse_pos = sf.Mouse.get_position(self._window)
             #startbutton
-            if self._startfield.contains(mouse_pos):
-                self._start.fill_color = sf.Color.GREEN
+            if self._startbutton.contains(mouse_pos):
+                self._startbutton.bgcolor(sf.Color.GREEN)
                 self._game_menu.start_game()
             #highscorebutton
-            if self._highfield.contains(mouse_pos):
-                self._high.fill_color = sf.Color.GREEN
+            if self._highscorebutton.contains(mouse_pos):
+                self._highscorebutton.color(sf.Color.GREEN)
                 
         if type(event) is sf.MouseButtonEvent and event.released:
-                self._start.fill_color = sf.Color.GREEN
-                self._high.fill_color = sf.Color.GREEN
+                self._startbutton.bgcolor(sf.Color.GREEN)
+                self._highscorebutton.bgcolor(sf.Color.GREEN)

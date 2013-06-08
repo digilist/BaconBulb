@@ -36,4 +36,23 @@ class Button(sf.Drawable):
 	def draw(self, target, states):
 		target.draw(self._recShape, states)
 		target.draw(self._text, states)
-	
+
+	def contains(self, point):
+		return self._rec.contains(point)
+
+	# change backgroundcolor
+	def bgcolor(self, color):
+		self._recShape.fill_color = color
+
+	# change text color
+	def fgcolor(self, color):
+		self._text.color
+
+	#change position
+	def position(self, position):
+		self._recShape.position = position
+		self._rec.position = position
+		textpos = (self._size - self._text.local_bounds.size)/2 + self._position
+		textpos = sf.Vector2(textpos[0],(textpos[1]-(self._text.local_bounds.size[1]/4)))
+		self._text.position = textpos
+
