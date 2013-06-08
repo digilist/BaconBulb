@@ -52,7 +52,7 @@ class Splash():
         self._window.draw(self._titel)
         for b in self._menubuttons:
             self._window.draw(b)
-            #print(b._text.string)
+            print(b._text.string)
 
         
     def listen_for_event(self, event):

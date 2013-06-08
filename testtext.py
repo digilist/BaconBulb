@@ -1,12 +1,10 @@
-#! /usr/bin/python2.7
-
 import sfml as sf
 
 window = sf.RenderWindow(sf.VideoMode(640, 480), "BaconBulb")
 
 font = sf.Font.from_file("DroidSansMono.ttf")
 text = sf.Text()
-text.string = "12345678"
+text.string = "1234567"
 text.font = font
 
 

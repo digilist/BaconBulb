@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#! /usr/bin/env python3
 
 """ Main File"""
 
@@ -27,8 +27,8 @@ class Startup():
 
     def loop(self):
         self._window.clear(sf.Color.BLACK)
-        self._window.draw(self._animation)
-        #self._game_menu.dispatch()
+        #self._window.draw(self._animation)
+        self._game_menu.dispatch()
         self._game_menu.handle_events()
         self._window.display()
 

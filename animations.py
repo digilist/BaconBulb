@@ -21,10 +21,11 @@ class Animation(sf.Drawable):
         current_frame = self._frames[self._current_frame];
 
         test = sf.Text("BaconBulb", settings.font, 50)
-        target.draw(current_frame["canvas"], stages)
-        print target
+        target.draw(current_frame["canvas"], states)
+        #print target
         #target.draw(test, stages)
-        print current_frame["canvas"]
+        print("lol")       
+       # print current_frame["canvas"]
 
         self._timer += 1
         if(self._timer >= current_frame.timer):
