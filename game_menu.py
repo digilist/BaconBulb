@@ -14,7 +14,7 @@ class GameMenu():
 
     def dispatch(self):
         self.handle_events();
-
+        
         if(self._current_screen == "splash"): #splash = menu
             self._splash.loop()
         elif(self._current_screen == "game"):
