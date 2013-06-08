@@ -17,18 +17,8 @@ class Startup():
             self.loop()
 
     def loop(self):
-        self.closeListener();
-
         self._window.clear(sf.Color.BLACK)
         self._game_menu.dispatch()
         self._window.display()
-
-    def closeListener(self):
-        for event in self._window.events:
-            if type(event) is sf.CloseEvent:
-                self.close()
-
-    def close(self):
-        self._window.close()
 
 Startup().run()
