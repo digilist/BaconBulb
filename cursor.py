@@ -3,7 +3,7 @@
 import sfml as sf
 
 # load cursor icon
-texture = sf.Texture.from_file("gfx/cursor.png")
+texture = sf.Texture.from_file("assets/cursor.png")
 cursorIcon = sf.Sprite(texture)
 
 class Cursor(sf.Drawable):
