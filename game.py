@@ -47,9 +47,7 @@ class GameEngine():
                 for y in range (0, 10):
                     if not self._window_list[x][y]:
                         OffWindows.append([x, y])
-           # print len(OffWindows)
             target = OffWindows.pop(random.randint(0, len(OffWindows) - 1))
-            #rint target
             self._window_list[target[0]][target[1]] = True
 
 

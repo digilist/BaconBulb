@@ -28,7 +28,7 @@ class Button(sf.Drawable):
 	#def Text():
 		#text
 		self._text = sf.Text()
-		self._text.string = "1234567"#self._lable
+		self._text.string = self._lable
 		self._text.font = self._font
 		self._text.character_size = self._fontsize
 		textpos = (self._size - self._text.local_bounds.size)/2 + self._position
