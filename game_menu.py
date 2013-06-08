@@ -1,6 +1,7 @@
 import sfml as sf
 from splash import Splash
 from game import Game
+from highscore_menu import Highscore_menu
 
 class GameMenu():
 
@@ -9,16 +10,19 @@ class GameMenu():
 
         self._splash = Splash(window, self)
         self._game = Game(window, self)
+        self._highscore = Highscore_menu(window, self)
 
         self.show_splash()
 
     def dispatch(self):
         self.handle_events();
-
+        
         if(self._current_screen == "splash"): #splash = menu
             self._splash.loop()
         elif(self._current_screen == "game"):
             self._game.loop()
+        elif(self._current_screen == "highscore"):
+            self._highscore.loop()
 
     def handle_events(self):
         for event in self._window.events:
@@ -32,6 +36,10 @@ class GameMenu():
     def start_game(self):
         self._current_screen = "game"
         self._event_listener = self._game
+
+    def show_highscore(self):
+        self._current_screen = "highscore"
+        self._event_listener = self._highscore
 
     def close(self):
         self._window.close()

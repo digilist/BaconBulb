@@ -22,7 +22,7 @@ class Startup():
             self.loop()
 
     def loop(self):
-        self._window.clear(sf.Color.BLACK)
+        self._window.clear(sf.Color(50, 50, 50))
         self._cursor.setPosition(sf.Mouse.get_position(self._window))
         self._cursor.rotate(2)
         self._game_menu.dispatch()

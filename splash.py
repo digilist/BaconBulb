@@ -53,13 +53,21 @@ class Splash():
         self._hausplace = 300
         self._haus.size = (150,400)
         self._haus.fill_color = sf.Color.GREEN
+        self._haus2 = sf.RectangleShape()
+        self._haus2place = 300
+        self._haus2.size = (400,150)
+        self._haus2.fill_color = sf.Color.RED
         
 
     def loop(self):
         self._haus.position = (self._hausplace,200)
         self._hausplace += 1
         self._hausplace = self._hausplace % 800
+        self._haus2.position = (self._haus2place,450)
+        self._haus2place -= 1
+        self._haus2place = self._haus2place % 800
         self._window.draw(self._haus)
+        self._window.draw(self._haus2)
         self._window.draw(self._titel)
         for b in self._menubuttons:
             self._window.draw(b)
@@ -85,6 +93,9 @@ class Splash():
             #startbutton
             if self._startbutton.contains(mouse_pos):
               self._game_menu.start_game()
+            #higscorebutton
+            if self._highscorebutton.contains(mouse_pos):
+              self._game_menu.show_highscore()
             #quitbutton
             if self._quitbutton.contains(mouse_pos):
               self._game_menu.close()    
