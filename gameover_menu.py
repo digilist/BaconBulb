@@ -22,8 +22,10 @@ class Gameover_menu():
         self._titletext.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2,50)
         self._scoretext = sf.Text("Points "+str(self._game_menu._points), self._font, 50)
         self._scoretext.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2,150)
+        self._enternametext = sf.Text("Enter Name!", self._font, 50)
+        self._enternametext.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2,250)
         self._nametext = sf.Text(self._name, self._font, 50)
-        self._nametext.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2,250)
+        self._nametext.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2,350)
 
         #backbutton
         self._okbutton = Button(sf.Vector2((self._window.size[0]-150)/2,(self._window.size[1]-50)), #position
@@ -46,23 +48,33 @@ class Gameover_menu():
         self._scoretext.string = "Points " + str(self._game_menu._points)
         self._window.draw(self._haus)
         self._window.draw(self._titletext)
+        self._window.draw(self._enternametext)
         self._window.draw(self._scoretext)
         self._window.draw(self._nametext)
         self._window.draw(self._okbutton)
             #for b in self._menubuttons:
             #   self._window.draw(b)
 
+
+
         
     def listen_for_event(self, event):
         self.mouse_listener(event)
         self.text_listener(event)
-        self.enter_listener(event)
+        self.key_listener(event)
 
-    def enter_listener(self, event):
+    def key_listener(self, event):
         if type(event) is sf.KeyEvent and event.pressed and event.code is sf.Keyboard.RETURN:
             self._highscore.addScore(self._name,self._game_menu._points)
+            self._name = ""
+            self._nametext.string = ""
             self._game_menu._highscore.scorelist()
-            self._game_menu.show_highscore() 
+            self._game_menu.show_highscore()
+        if type(event) is sf.KeyEvent and event.pressed and event.code is sf.Keyboard.BACK_SPACE:
+            if not (len(self._name)==0):
+                self._name = self._name[:-1]
+                self._nametext.string = self._name
+
 
     def mouse_listener(self, event):
         if type(event) is sf.MouseButtonEvent and event.pressed and sf.Mouse.is_button_pressed(sf.Mouse.LEFT):
@@ -75,6 +87,8 @@ class Gameover_menu():
             #startbutton
             if self._okbutton.contains(mouse_pos):
                 self._highscore.addScore(self._name,self._game_menu._points)
+                self._name = ""
+                self._nametext.string = ""
                 self._game_menu._highscore.scorelist()
                 self._game_menu.show_highscore()   
         if type(event) is sf.MouseButtonEvent and event.released:
