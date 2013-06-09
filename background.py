@@ -14,11 +14,15 @@ class Background():
             self._background[x].position = (random.randint(0,self._window.size[0]),random.randint(0,self._window.size[1]))
             self._background[x].fill_color = sf.Color(random.randint(0,255),random.randint(0,255),random.randint(0,255))
 
+    #def close(self):
+
+
     def draw(self, target):
         for background in self._background:
-            background.position = ((background.position[0] + random.randint(-1,1))%self._window.size[0], 
-                                   (background.position[1] + random.randint(-1,1))%self._window.size[1])
-            #background.radius = (background.radius + random.randint(-1,1))%20
-            self._radius[background] = self._radius[background]+random.randint(-1,1)/10
-            background.radius = math.fabs(math.sin(self._radius[background])*20)
-            target.draw(background)
+            if (self._window.size[0] > 0 or self._window.size >0):
+                background.position = ((background.position[0] + random.randint(-1,1))%self._window.size[0], 
+                                       (background.position[1] + random.randint(-1,1))%self._window.size[1])
+                #background.radius = (background.radius + random.randint(-1,1))%20
+                self._radius[background] = self._radius[background]+random.randint(-1,1)/10
+                background.radius = math.fabs(math.sin(self._radius[background])*20)
+                target.draw(background)
