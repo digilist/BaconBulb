@@ -3,6 +3,7 @@ from splash import Splash
 from game import Game
 from highscore_menu import Highscore_menu
 from gameover_menu import Gameover_menu
+from background import Background
 
 class GameMenu():
 
@@ -13,6 +14,7 @@ class GameMenu():
         self._game = Game(window, self)
         self._highscore = Highscore_menu(window, self)
         self._gameover = Gameover_menu(window, self)
+        self._background = Background(window)
         
 
         self.show_splash()
@@ -21,13 +23,13 @@ class GameMenu():
         self.handle_events();
         
         if(self._current_screen == "splash"): #splash = menu
-            self._splash.loop()
+            self._splash.loop(self._background)
         elif(self._current_screen == "game"):
             self._game.loop()
         elif(self._current_screen == "highscore"):
-            self._highscore.loop()
+            self._highscore.loop(self._background)
         elif(self._current_screen == "gameover"):
-            self._gameover.loop()
+            self._gameover.loop(self._background)
 
     def handle_events(self):
         for event in self._window.events:

@@ -14,10 +14,10 @@ class Gameover_menu():
         
 
         #background
-        self._haus = sf.RectangleShape()
-        self._hausplace = 300
-        self._haus.size = (150,400)
-        self._haus.fill_color = sf.Color.GREEN
+        # self._haus = sf.RectangleShape()
+        # self._hausplace = 300
+        # self._haus.size = (150,400)
+        # self._haus.fill_color = sf.Color.GREEN
         self._titletext = sf.Text("Game Over", self._font, 50)
         self._titletext.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2,50)
         self._scoretext = sf.Text("Points "+str(self._game_menu._points), self._font, 50)
@@ -41,12 +41,13 @@ class Gameover_menu():
 
 
 
-    def loop(self):
-        self._haus.position = (self._hausplace,200)
-        self._hausplace += 1
-        self._hausplace = self._hausplace % 800
+    def loop(self, background):
+        # self._haus.position = (self._hausplace,200)
+        # self._hausplace += 1
+        # self._hausplace = self._hausplace % 800
         self._scoretext.string = "Points " + str(self._game_menu._points)
-        self._window.draw(self._haus)
+        # self._window.draw(self._haus)
+        background.draw(self._window)
         self._window.draw(self._titletext)
         self._window.draw(self._enternametext)
         self._window.draw(self._scoretext)

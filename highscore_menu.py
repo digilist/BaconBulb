@@ -48,11 +48,12 @@ class Highscore_menu():
             self._highcontainer.add_element(linescore,sf.Vector2(250,(50*x+50)))
 
 
-    def loop(self):
-        self._haus.position = (self._hausplace,200)
-        self._hausplace += 1
-        self._hausplace = self._hausplace % 800
-        self._window.draw(self._haus)
+    def loop(self, background):
+        # self._haus.position = (self._hausplace,200)
+        # self._hausplace += 1
+        # self._hausplace = self._hausplace % 800
+        background.draw(self._window)
+        # self._window.draw(self._haus)
         self._window.draw(self._highcontainer)
         self._window.draw(self._backbutton)
             #for b in self._menubuttons:
