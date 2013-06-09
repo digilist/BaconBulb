@@ -2,15 +2,18 @@ import sfml as sf
 from splash import Splash
 from game import Game
 from highscore_menu import Highscore_menu
+from gameover_menu import Gameover_menu
 
 class GameMenu():
 
     def __init__(self, window):
         self._window = window
-
+        self._points = 0
         self._splash = Splash(window, self)
         self._game = Game(window, self)
         self._highscore = Highscore_menu(window, self)
+        self._gameover = Gameover_menu(window, self)
+        
 
         self.show_splash()
 
@@ -23,6 +26,8 @@ class GameMenu():
             self._game.loop()
         elif(self._current_screen == "highscore"):
             self._highscore.loop()
+        elif(self._current_screen == "gameover"):
+            self._gameover.loop()
 
     def handle_events(self):
         for event in self._window.events:
@@ -40,6 +45,11 @@ class GameMenu():
     def show_highscore(self):
         self._current_screen = "highscore"
         self._event_listener = self._highscore
+
+    def show_gameover(self,points):
+        self._current_screen = "gameover"
+        self._event_listener =  self._gameover
+        self._points = points
 
     def close(self):
         self._window.close()

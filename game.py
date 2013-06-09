@@ -16,8 +16,10 @@ class Game():
         self._game_engine.loop()
 
         if self._game_engine._check_end():
+            #print(self._game_engine._points)
+            
+            self._game_menu.show_gameover(self._game_engine._points) # later show highscore
             self._game_engine.reset()
-            self._game_menu.show_splash() # later show highscore
 
     def listen_for_event(self, event):
         self._escape_listener(event);

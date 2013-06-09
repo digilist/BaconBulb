@@ -1,4 +1,5 @@
 import sfml as sf
+import settings
 from button import Button
 
 class Splash():
@@ -6,7 +7,7 @@ class Splash():
     def __init__(self, window, game_menu):
         self._window = window
         self._game_menu = game_menu
-        self._font = sf.Font.from_file("DroidSansMono.ttf")
+        self._font = settings.defaultFont
         self._titel = sf.Text("BaconBulb", self._font, 50)
 
         self._menubuttons = []
@@ -95,6 +96,7 @@ class Splash():
               self._game_menu.start_game()
             #higscorebutton
             if self._highscorebutton.contains(mouse_pos):
+              self._game_menu._highscore.scorelist()
               self._game_menu.show_highscore()
             #quitbutton
             if self._quitbutton.contains(mouse_pos):

@@ -1,4 +1,5 @@
 import sfml as sf
+import settings
 from button import Button
 from highscore import Highscore
 from drawable_container import DrawableContainer
@@ -8,10 +9,10 @@ class Highscore_menu():
     def __init__(self, window, game_menu):
         self._window = window
         self._game_menu = game_menu
-        self._font = sf.Font.from_file("DroidSansMono.ttf")
+        self._font = settings.defaultFont
         self._score = Highscore().getScore()
-        self._highcontainer = DrawableContainer()
-        self._highcontainer.position = ((self._window.size[0]-200)/2,0)
+        
+        
 
         #background
         self._haus = sf.RectangleShape()
@@ -19,13 +20,7 @@ class Highscore_menu():
         self._haus.size = (150,400)
         self._haus.fill_color = sf.Color.GREEN
 
-        self._titletext = sf.Text("Highscore", self._font, 50)
-        self._highcontainer.add_element(self._titletext)
-        for x in range(10):
-            name = self._score[x]['name']
-            score = self._score[x]['score']
-            scoreline = sf.Text(name + " : " + str(score), self._font, 40)
-            self._highcontainer.add_element(scoreline,sf.Vector2(0,(50*x)+50))
+        
 
         #backbutton
         self._backbutton = Button(sf.Vector2(20,(self._window.size[1]-50)), #position
@@ -38,7 +33,17 @@ class Highscore_menu():
                                   self._font,          #font
                                   17)                  #text size
 
-
+    def scorelist(self):
+        self._highcontainer = DrawableContainer()
+        self._score = Highscore().getScore()
+        self._highcontainer.position = ((self._window.size[0]-200)/2,0)
+        self._titletext = sf.Text("Highscore", self._font, 50)
+        self._highcontainer.add_element(self._titletext)
+        for x in range(10):
+            name = self._score[x]['name']
+            score = self._score[x]['score']
+            scoreline = sf.Text(name + " : " + str(score), self._font, 40)
+            self._highcontainer.add_element(scoreline,sf.Vector2(0,(50*x)+50))
 
 
     def loop(self):
