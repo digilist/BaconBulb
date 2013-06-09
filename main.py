@@ -18,6 +18,7 @@ class Startup():
         self._game_menu = GameMenu(self._window)
 
     def run(self):
+        settings.music.play()
         while self._window.is_open:
             self.loop()
 
