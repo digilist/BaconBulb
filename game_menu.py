@@ -4,6 +4,7 @@ from game import Game
 from highscore_menu import Highscore_menu
 from gameover_menu import Gameover_menu
 from background import Background
+from help_menu import Help_Menu
 
 class GameMenu():
 
@@ -15,6 +16,7 @@ class GameMenu():
         self._highscore = Highscore_menu(window, self)
         self._gameover = Gameover_menu(window, self)
         self._background = Background(window)
+        self._help = Help_Menu(window, self)
         
 
         self.show_splash()
@@ -30,6 +32,8 @@ class GameMenu():
             self._highscore.loop(self._background)
         elif(self._current_screen == "gameover"):
             self._gameover.loop(self._background)
+        elif(self._current_screen == "help"):
+            self._help.loop(self._background)
 
     def handle_events(self):
         for event in self._window.events:
@@ -52,6 +56,10 @@ class GameMenu():
         self._current_screen = "gameover"
         self._event_listener =  self._gameover
         self._points = points
+
+    def show_help(self):
+        self._current_screen = "help"
+        self._event_listener = self._help
 
     def close(self):
         self._window.close()

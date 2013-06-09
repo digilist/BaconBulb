@@ -9,10 +9,23 @@ class Splash():
         self._game_menu = game_menu
         self._font = settings.defaultFont
         self._titel = sf.Text("BaconBulb", self._font, 50)
+        self._titel.position = ((self._window.size[0]-self._titel.local_bounds.size[0])/2,40)
+        self._titel_left = sf.Text("BaconBulb", self._font, 50)
+        self._titel_left.position = ((self._window.size[0]-self._titel.local_bounds.size[0])/2-1.5,40)
+        self._titel_left.color = sf.Color.BLACK
+        self._titel_up = sf.Text("BaconBulb", self._font, 50)
+        self._titel_up.position = ((self._window.size[0]-self._titel.local_bounds.size[0])/2,40-1.5)
+        self._titel_up.color = sf.Color.BLACK
+        self._titel_right = sf.Text("BaconBulb", self._font, 50)
+        self._titel_right.position = ((self._window.size[0]-self._titel.local_bounds.size[0])/2+1.5,40)
+        self._titel_right.color = sf.Color.BLACK
+        self._titel_down = sf.Text("BaconBulb", self._font, 50)
+        self._titel_down.position = ((self._window.size[0]-self._titel.local_bounds.size[0])/2,40+1.5)
+        self._titel_down.color = sf.Color.BLACK
 
         self._menubuttons = []
         #startbutton
-        self._startbutton = Button(sf.Vector2((self._window.size[0]-200)/2,200), #position
+        self._startbutton = Button(sf.Vector2((self._window.size[0]-150)/2,200), #position
                                    sf.Vector2(150,20),  #size
                                    sf.Color.GREEN,      #background color
                                    sf.Color.BLACK,      #text color
@@ -24,7 +37,7 @@ class Splash():
         self._menubuttons.append(self._startbutton)
 
         #highscorebutton
-        self._highscorebutton = Button(sf.Vector2((self._window.size[0]-200)/2,250), #position
+        self._highscorebutton = Button(sf.Vector2((self._window.size[0]-150)/2,250), #position
                                        sf.Vector2(150,20),  #size
                                        sf.Color.GREEN,      #background color
                                        sf.Color.BLACK,      #text color
@@ -35,8 +48,20 @@ class Splash():
                                        17)                  #text size
         self._menubuttons.append(self._highscorebutton)
 
+        #helpbutton
+        self._helpbutton = Button(sf.Vector2((self._window.size[0]-150)/2,300),
+                                  sf.Vector2(150,20),
+                                  sf.Color.GREEN,
+                                  sf.Color.BLACK,
+                                  sf.Color.RED,
+                                  2,
+                                  "Help",
+                                  self._font,
+                                  17)
+        self._menubuttons.append(self._helpbutton)
+
         #quitbutton
-        self._quitbutton = Button(sf.Vector2((self._window.size[0]-200)/2,300), #position
+        self._quitbutton = Button(sf.Vector2((self._window.size[0]-150)/2,350), #position
                                   sf.Vector2(150,20),  #size
                                   sf.Color.GREEN,      #background color
                                   sf.Color.BLACK,      #text color
@@ -47,39 +72,12 @@ class Splash():
                                   17)                  #text size
         self._menubuttons.append(self._quitbutton)
 
-
-
-        #background
-        # self._background = []
-        # for x in range(40):
-        #     self._background.append(sf.CircleShape())
-        #     self._background[x].radius = random.randint(0,20)
-        #     self._background[x].position = (random.randint(0,self._window.size[0]),random.randint(0,self._window.size[1]))
-        #     self._background[x].fill_color = sf.Color(random.randint(0,255),random.randint(0,255),random.randint(0,255))
-
-        # self._haus = sf.RectangleShape()
-        # self._hausplace = 300
-        # self._haus.size = (150,400)
-        # self._haus.fill_color = sf.Color.GREEN
-        # self._haus2 = sf.RectangleShape()
-        # self._haus2place = 300
-        # self._haus2.size = (400,150)
-        # self._haus2.fill_color = sf.Color.RED
-        
-
     def loop(self, background):
-        # self._haus.position = (self._hausplace,200)
-        # self._hausplace += 1
-        # self._hausplace = self._hausplace % 800
-        # self._haus2.position = (self._haus2place,450)
-        # self._haus2place -= 1
-        # self._haus2place = self._haus2place % 800
-        # for background in self._background:
-        #     background.position = ((background.position[0] + random.randint(-1,1))%self._window.size[0], 
-        #                            (background.position[1] + random.randint(-1,1))%self._window.size[1])
-        #     background.radius = (background.radius + random.randint(-1,1))%20
-        #     self._window.draw(background)
         background.draw(self._window)
+        self._window.draw(self._titel_left)
+        self._window.draw(self._titel_up)
+        self._window.draw(self._titel_right)
+        self._window.draw(self._titel_down)
         self._window.draw(self._titel)
         for b in self._menubuttons:
             self._window.draw(b)
@@ -109,6 +107,9 @@ class Splash():
             if self._highscorebutton.contains(mouse_pos):
                 self._game_menu._highscore.scorelist()
                 self._game_menu.show_highscore()
+            #helpbutton
+            if self._helpbutton.contains(mouse_pos):
+                self._game_menu.show_help()
             #quitbutton
             if self._quitbutton.contains(mouse_pos):
                 self._game_menu.close()    

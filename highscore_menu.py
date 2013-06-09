@@ -11,16 +11,6 @@ class Highscore_menu():
         self._game_menu = game_menu
         self._font = settings.defaultFont
         self._score = Highscore().getScore()
-        
-        
-
-        #background
-        self._haus = sf.RectangleShape()
-        self._hausplace = 300
-        self._haus.size = (150,400)
-        self._haus.fill_color = sf.Color.GREEN
-
-        
 
         #backbutton
         self._backbutton = Button(sf.Vector2(20,(self._window.size[1]-50)), #position
