@@ -28,13 +28,53 @@ class Highscore_menu():
         self._score = Highscore().getScore()
         self._highcontainer.position = ((self._window.size[0]-200)/2,0)
         self._titletext = sf.Text("Highscore", self._font, 50)
+        self._titletext_left = sf.Text("Highscore", self._font, 50)
+        self._titletext_left.position = (0-1.5,0)
+        self._titletext_left.color = sf.Color.BLACK
+        self._titletext_up = sf.Text("Highscore", self._font, 50)
+        self._titletext_up.position = (0,0-1.5)
+        self._titletext_up.color = sf.Color.BLACK
+        self._titletext_right = sf.Text("Highscore", self._font, 50)
+        self._titletext_right.position = (0+1.5,0)
+        self._titletext_right.color = sf.Color.BLACK
+        self._titletext_down = sf.Text("Highscore", self._font, 50)
+        self._titletext_down.position = (0,0+1.5)
+        self._titletext_down.color = sf.Color.BLACK
+        self._highcontainer.add_element(self._titletext_left)
+        self._highcontainer.add_element(self._titletext_up)
+        self._highcontainer.add_element(self._titletext_right)
+        self._highcontainer.add_element(self._titletext_down)
         self._highcontainer.add_element(self._titletext)
         for x in range(10):
             name = self._score[x]['name']
             score = self._score[x]['score']
             linename = sf.Text(name, self._font, 40)
+            linename_left = sf.Text(name, self._font, 40)
+            linename_left.color = sf.Color.BLACK
+            linename_up = sf.Text(name, self._font, 40)
+            linename_up.color = sf.Color.BLACK
+            linename_right = sf.Text(name, self._font, 40)
+            linename_right.color = sf.Color.BLACK
+            linename_down = sf.Text(name, self._font, 40)
+            linename_down.color = sf.Color.BLACK
             linescore = sf.Text(str(score), self._font, 40)
+            linescore_left = sf.Text(str(score), self._font, 40)
+            linescore_left.color = sf.Color.BLACK
+            linescore_up = sf.Text(str(score), self._font, 40)
+            linescore_up.color = sf.Color.BLACK
+            linescore_right = sf.Text(str(score), self._font, 40)
+            linescore_right.color = sf.Color.BLACK
+            linescore_down = sf.Text(str(score), self._font, 40)
+            linescore_down.color = sf.Color.BLACK
+            self._highcontainer.add_element(linename_left,sf.Vector2(-200-1.5,(50*x)+50))
+            self._highcontainer.add_element(linename_up,sf.Vector2(-200,(50*x)+50-1.5))
+            self._highcontainer.add_element(linename_right,sf.Vector2(-200+1.5,(50*x)+50))
+            self._highcontainer.add_element(linename_down,sf.Vector2(-200,(50*x)+50+1.5))
             self._highcontainer.add_element(linename,sf.Vector2(-200,(50*x)+50))
+            self._highcontainer.add_element(linescore_left,sf.Vector2(250-1.5,(50*x+50)))
+            self._highcontainer.add_element(linescore_up,sf.Vector2(250,(50*x+50-1.5)))
+            self._highcontainer.add_element(linescore_right,sf.Vector2(250+1.5,(50*x+50)))
+            self._highcontainer.add_element(linescore_down,sf.Vector2(250,(50*x+50+1.5)))
             self._highcontainer.add_element(linescore,sf.Vector2(250,(50*x+50)))
 
 
