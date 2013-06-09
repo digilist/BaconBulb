@@ -26,13 +26,13 @@ class Gameover_menu():
         self._nametext.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2,250)
 
         #backbutton
-        self._okbutton = Button(sf.Vector2(20,(self._window.size[1]-50)), #position
+        self._okbutton = Button(sf.Vector2((self._window.size[0]-150)/2,(self._window.size[1]-50)), #position
                                   sf.Vector2(150,20),  #size
                                   sf.Color.GREEN,      #background color
                                   sf.Color.BLACK,      #text color
                                   sf.Color.RED,        #outline color
                                   2,                   #outline thickness
-                                  "Back",              #lable
+                                  "OK",              #lable
                                   self._font,          #font
                                   17)                  #text size
 
@@ -56,10 +56,13 @@ class Gameover_menu():
     def listen_for_event(self, event):
         self.mouse_listener(event)
         self.text_listener(event)
+        self.enter_listener(event)
 
     def enter_listener(self, event):
         if type(event) is sf.KeyEvent and event.pressed and event.code is sf.Keyboard.RETURN:
-            self._highscore.addScore("test",self._game_menu._points)
+            self._highscore.addScore(self._name,self._game_menu._points)
+            self._game_menu._highscore.scorelist()
+            self._game_menu.show_highscore() 
 
     def mouse_listener(self, event):
         if type(event) is sf.MouseButtonEvent and event.pressed and sf.Mouse.is_button_pressed(sf.Mouse.LEFT):
@@ -78,8 +81,7 @@ class Gameover_menu():
             self._okbutton.bgcolor(sf.Color.GREEN)
 
     def text_listener(self, event):
-        if type(event) is sf.KeyEvent:
-            
-            #self._name += chr(event.code)
-            print(event.code.decode("utf-8", "strict"))
-            #self._name = sf.TextEvent
+        if type(event) is sf.TextEvent:
+            if(48 <= event.unicode <= 57 or 65 <= event.unicode <= 90 or 97 <= event.unicode <= 122):
+                self._name += chr(event.unicode)
+                self._nametext.string = self._name

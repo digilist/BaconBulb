@@ -42,8 +42,10 @@ class Highscore_menu():
         for x in range(10):
             name = self._score[x]['name']
             score = self._score[x]['score']
-            scoreline = sf.Text(name + " : " + str(score), self._font, 40)
-            self._highcontainer.add_element(scoreline,sf.Vector2(0,(50*x)+50))
+            linename = sf.Text(name, self._font, 40)
+            linescore = sf.Text(str(score), self._font, 40)
+            self._highcontainer.add_element(linename,sf.Vector2(-200,(50*x)+50))
+            self._highcontainer.add_element(linescore,sf.Vector2(250,(50*x+50)))
 
 
     def loop(self):
