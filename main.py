@@ -27,7 +27,6 @@ class Startup():
         self._cursor.setPosition(sf.Mouse.get_position(self._window))
         self._cursor.rotate(2)
         self._game_menu.dispatch()
-        self._game_menu.handle_events()
         self._window.draw(self._cursor)
         self._window.display()
 

@@ -8,6 +8,3 @@ foobar:1
 foobar:1
 foobar:1
 foobar:1
-:2891
-planlos:995
-asd:2713

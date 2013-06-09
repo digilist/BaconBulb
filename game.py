@@ -4,6 +4,7 @@ import settings
 from animations import Animation
 from datetime import datetime
 from drawable_container import DrawableContainer
+from powerbar import Powerbar
 
 class Game():
 
@@ -16,15 +17,12 @@ class Game():
         self._game_engine.loop()
 
         if self._game_engine._check_end():
-            #print(self._game_engine._points)
-            
             self._game_menu.show_gameover(self._game_engine._points) # later show highscore
             self._game_engine.reset()
 
     def listen_for_event(self, event):
         self._escape_listener(event);
         self._game_engine._click_listener(event);
-        self._game_engine._keyboard_listener(event)
     
     def _escape_listener(self, event):
         if type(event) is sf.KeyEvent and event.pressed and event.code is sf.Keyboard.ESCAPE:
@@ -52,23 +50,45 @@ class GameEngine():
         self._points = 0
         self._acceleration = True
 
+        self._powerbar_view = PowerbarView(self._window)
+        self._energy = 100
+        self._energy_cmp = self._energy
+        self._dt = datetime.now()
+        self._dt2 = datetime.now()
+        self._dt3 = datetime.now()
+        self._dt_cmp = self._dt
+        self._dt_cmp2= self._dt
+        self._dt_cmp3 = self._dt
+
         self._frame_count = 0
         self._window_on_count = 50
 
-        self._monster_texture = sf.Texture.from_file("assets/monster.png")
+        self._monster_texture = settings.monsterTexture
+        self._monster_sprite = sf.Sprite(self._monster_texture)
 
         self._windows = {} # contains all windows with their current status
         for x in range (0, self._columns):
             self._windows[x] = {}
             for y in range (0, self._rows):
-                self._create_window(x, y, False)
+                self._create_window(x, y)
+
 
     def loop(self):
         self._turn_on_light()
         self._turn_off_lights()
         self._display_house()
-        self._display_main_monster()
+        # self._display_main_monster()
         self._display_meter()
+        self._dt_cmp = datetime.now()
+        self._dt_cmp3 = datetime.now()
+        if((self._dt_cmp-self._dt).microseconds >= 1/40):
+            self._dt = self._dt_cmp
+            self._energy_cmp = self._energy
+            self._display_powerbar()
+        if((self._dt_cmp3-self._dt3).microseconds >= 600000):
+            self._dt3 = self._dt_cmp3
+            self._spawn_rnd_monster()
+            
 
     """ Turn on the next bulb """
     def _turn_on_light(self):
@@ -80,7 +100,13 @@ class GameEngine():
                         OffWindows.append([x, y])
             target = OffWindows.pop(random.randint(0, len(OffWindows) - 1))
             x, y = target[0], target[1]
-            self._create_window(x, y, True)
+            self._windows[x][y]["status"] = True
+            self._windows[x][y]["window"].fill_color = sf.Color.WHITE
+            self._windows[x][y]["create_time"] = datetime.now()
+            self._windows[x][y]["energyConsumption"] = 0.01
+            animWin = Animation(self._windows[x][y]["window"])
+            self._windows[x][y]["animating"] = animWin
+            self._windows[x][y]["a_creation_time"] = datetime.now()
 
         if (self._frame_count % settings.speedIncrement == 0 and self._acceleration):
             self._window_on_count = self._window_on_count - 1 if self._window_on_count > 1 else 1
@@ -92,44 +118,52 @@ class GameEngine():
         for x in range (0, self._columns):
             for y in range (0, self._rows):
                 if (self._windows[x][y]["status"] and (datetime.now()-self._windows[x][y]["create_time"]).seconds >= 9):
-                    self._create_window(x, y, False)
+                    self._windows[x][y]["status"] = False
+                    self._windows[x][y]["hasBread"] = False
+                    self._windows[x][y]["window"].fill_color = self._houseColor
 
-
-    """ Display the House with all Windows """
     def _display_house(self):
-        house_container = DrawableContainer()
-        house_container.position = self._house_position
+        totalConsumption = 0
 
-        house_size = self._get_house_size()
+        self._dt_cmp2 = datetime.now()
+        if((self._dt2-self._dt_cmp2).microseconds >= 1/40):
+            for x in range (0, self._columns):
+                for y in range (0, self._rows):
+                    if(self._windows[x][y]["status"]):
+                        self._window.draw(self._windows[x][y]["animating"])
+                        if(self._windows[x][y]["hasBread"] == True):
+                            self._monster_sprite.position = self._windows[x][y]["window"].position
+                            self._window.draw(self._monster_sprite)
+                        totalConsumption += self._windows[x][y]["energyConsumption"]
+                    elif(not self._windows[x][y]["isDrawn"]):
+                        self._window.draw(self._windows[x][y]["window"])
+                        self._windows[x][y]["isDrawn"] = True
 
-        house = sf.RectangleShape()
-        house.size = sf.Vector2(house_size[0], house_size[1])
-        house.fill_color = self._houseColor
-        house_container.add_element(house)
+        self._energy -= totalConsumption
 
-        for x in range (0, self._columns):
-            for y in range (0, self._rows):
-                house_container.add_element(self._windows[x][y]["window"])
 
-        self._window.draw(house_container)
 
     """ Display the meter, which shows the counter """
     def _display_meter(self):
         self._meter_view.draw(self._points)
+
+    def _display_powerbar(self):
+        self._powerbar_view.draw(self._energy)
 
     def _display_main_monster(self):
         monster = sf.Sprite(self._monster_texture)
         monster.texture_rectangle = sf.Rectangle((0, 0), (self._monster_texture.width, self._monster_texture.height))
         monster.position = ((settings.windowWidth - self._monster_texture.width) / 2, (settings.windowHeight - self._monster_texture.height) / 2)
 
-        #self._window.draw(monster)
-
     """ Check, whether the game is over """
     def _check_end(self):
+
         end = True
-        for x in range (0, self._columns):
-            for y in range (0, self._rows):
-                end = end and self._windows[x][y]["status"]
+
+        if(not self._energy < 0.5):
+            for x in range (0, self._columns):
+                for y in range (0, self._rows):
+                    end = end and self._windows[x][y]["status"]
 
         return end
 
@@ -153,67 +187,94 @@ class GameEngine():
             for x in range (0, self._columns):
                 for y in range (0, self._rows):
                     if self._are_coordinates_in_window(event.position.x, event.position.y, x, y) and self._windows[x][y]["status"]:
-                            self._lightblub_clicked(x, y)
+                            self._lightbulb_clicked(x, y)
 
-    """ is called, when die lighbulb on the given coordinates is clicked """
-    def _lightblub_clicked(self, x, y):
-        # calculate points
-        diff =  datetime.now() - self._windows[x][y]["create_time"]
-        diff = round(((diff.seconds * 1000) + (diff.microseconds / 1000)) / 100) # in microseconds
+    def _lightbulb_clicked(self, x, y):
+        diff = datetime.now() -self._windows[x][y]["create_time"]
+        diff = round(((diff.seconds * 1000) + (diff.microseconds/1000))/100)
 
-        points = max(5, 50 - diff) # between 10 and 50 points
+        points = max(5, 50-diff)
+        if(self._energy+1 > 100):
+            self._energy = 100
+        else:
+            self._energy += 1
 
+        if(self._windows[x][y]["hasBread"]):
+            if(self._energy+2 > 100):
+                self._energy = 100
+            else:
+                self._energy += 2
+                self._points += 10
         self._points += points
-        self._create_window(x, y, False)
+        self._windows[x][y]["status"] = False
+        self._windows[x][y]["window"].fill_color = self._houseColor
+        self._windows[x][y]["hasBread"] = False
+        self._windows[x][y]["animating"] = None
 
     """ create a new Window on the given coordinates """
-    def _create_window(self, x, y, turnedOn):
-        if turnedOn:
-            window = self._create_animated_window()
-        else:
-            window = sf.RectangleShape()
-            window.size = sf.Vector2(self._windowWidth, self._windowHeight)
-            window.fill_color = self._houseColor
-            turnedOn = False
-
+    def _create_window(self, x, y):
         pX = x * (self._windowWidth + self._borderWeight) + self._borderWeight
         pY = y * (self._windowHeight + self._borderWeight) + self._borderWeight
-        window.position = sf.Vector2(pX, pY)
+
+        window = sf.RectangleShape(sf.Vector2(self._windowWidth, self._windowHeight))
+        window.fill_color = self._houseColor
+
+        window.position = sf.Vector2(pX, pY) + self._house_position
+        
 
         self._windows[x][y] = {
             "window": window,
-            "status": turnedOn,
-            "create_time": datetime.now()
+            "status": False,
+            "create_time": datetime.now(),
+            "energyConsumption": 0,
+            "animating": None,
+            "a_creation_time": datetime.now(),
+            "isDrawn": False,
+            "hasBread": False
         }
 
-    """ creates a animated window, which appears when the light was turned on """
-    def _create_animated_window(self):
-        animation = Animation()
+    def _spawn_rnd_monster(self):
+        rnd = random.random()*100
+        if(rnd < 10):
+            OnWindows = []
+            for x in range (0, self._columns):
+                for y in range (0, self._rows):
+                    if self._windows[x][y]["status"]:
+                        OnWindows.append([x, y])
+            target = OnWindows.pop(random.randint(0, len(OnWindows) - 1))
+            x, y = target[0], target[1]
+            self._windows[x][y]["hasBread"] = True
 
-        for i in range(255, 5, -10):
-            w = sf.RectangleShape()
-            w.size = sf.Vector2(self._windowWidth, self._windowHeight)
-            w.fill_color = sf.Color(255, 255, i)
+
+    # """ creates a animated window, which appears when the light was turned on """
+    # def _create_animated_window(self):
+    #     animation = Animation()
+
+    #     for i in range(255, 5, -10):
+    #         w = sf.RectangleShape()
+    #         w.size = sf.Vector2(self._windowWidth, self._windowHeight)
+    #         w.fill_color = sf.Color(255, 255, i)
             
-            animation.add_frame(200, w)
+    #         animation.add_frame(200, w)
 
-        last_frame = animation.get_frame(animation.get_number_of_frames() - 1)
-        last_frame["timer"] = 2000
+    #     last_frame = animation.get_frame(animation.get_number_of_frames() - 1)
+    #     last_frame["timer"] = 2000
         
-        rand = random.random() * 100
-        if(rand < 30): # in 30% of windows show the monster
+    #     rand = random.random() * 100
+    #     if(rand < 30): # in 30% of windows show the monster
 
-            monster = sf.Sprite(self._monster_texture)
-            monster.texture_rectangle = sf.Rectangle((0, 0), (self._monster_texture.width, self._monster_texture.height))
+    #         monster = sf.Sprite(self._monster_texture)
+    #         monster.texture_rectangle = sf.Rectangle((0, 0), (self._monster_texture.width, self._monster_texture.height))
 
-            container = DrawableContainer()
-            container.add_element(last_frame["canvas"])
-            container.add_element(monster, (8, 10))
+    #         container = DrawableContainer()
+    #         container.add_element(last_frame["canvas"])
+    #         container.add_element(monster, (8, 10))
 
-            animation.add_frame(round(500 + random.random() * 1500), container)
-            animation.add_frame(1000, last_frame["canvas"]) # and disappear
+    #         animation.add_frame(round(500 + random.random() * 1500), container)
+    #         animation.add_frame(1000, last_frame["canvas"]) # and disappear
 
-        return animation
+    #     return animation
+
     def _are_coordinates_in_window(self, positionX, positionY, windowX, windowY):
         result = positionX > self._house_position[0] + windowX * (self._windowWidth + self._borderWeight) + self._borderWeight
         result = result and positionX < self._house_position[0] + (windowX + 1) * (self._windowWidth + self._borderWeight)
@@ -231,14 +292,13 @@ class GameEngine():
 class MeterView():
 
     def __init__(self, window):
-        box = sf.RectangleShape()
-        box.size = (92, 38)
-        box.fill_color = sf.Color.WHITE
+        self._box = sf.RectangleShape()
+        self._box.size = (92, 38)
+        self._box.fill_color = sf.Color.WHITE
 
         self._text = sf.Text("00000", settings.monospaceFont, 30)
         self._text.color = sf.Color.BLACK
 
-        self._box = box
         self._window = window
 
     def draw(self, counter):
@@ -250,3 +310,22 @@ class MeterView():
 
         self._window.draw(self._box)
         self._window.draw(self._text)
+
+class PowerbarView():
+
+    def __init__(self, window):
+        self._bar = sf.RectangleShape()
+        self._bar.position = (92,0)
+        self._orig_size = (settings.windowWidth-self._bar.position[0],38)
+        self._bar.size = (settings.windowWidth-self._bar.position[0],38)
+        self._bar.fill_color = sf.Color.GREEN
+
+        self._window = window
+
+    def draw(self, energy):
+        if energy > 50.0:
+            self._bar.fill_color = sf.Color(255*(100-energy)*2/100, 255, 0, 255)
+        else:
+            self._bar.fill_color = sf.Color(255, 255*energy/50, 0, 255)
+        self._bar.size = (energy/100*self._orig_size[0],self._orig_size[1])
+        self._window.draw(self._bar)
