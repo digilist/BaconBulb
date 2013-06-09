@@ -31,8 +31,9 @@ class Button(sf.Drawable):
 		self._text.string = self._lable
 		self._text.font = self._font
 		self._text.character_size = self._fontsize
-		textpos = (self._size - self._text.local_bounds.size)/2 + self._position
-		textpos = sf.Vector2(textpos[0],(textpos[1]-(self._text.local_bounds.size[1]/4)))
+		self._text.style = sf.Text.BOLD
+		textpos = sf.Vector2((self._size[0] - self._text.local_bounds.size[0])/2, self._size[1] - self._fontsize) + self._position
+		textpos = sf.Vector2(textpos[0],(textpos[1]-(self._text.local_bounds.size[1]/5)))
 		self._text.position = textpos
 		self._text.color = self._fgcolor
 
