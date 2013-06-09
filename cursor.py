@@ -1,14 +1,12 @@
 #! /usr/bin/python3
 
 import sfml as sf
+import settings
 
 class Cursor(sf.Drawable):
     def __init__(self, window):
-        # load cursor icon
-        texture = sf.Texture.from_file("assets/cursor.png")
-        
         self._window = window
-        self._icon = sf.Sprite(texture)
+        self._icon = sf.Sprite(settings.cursorTexture)
         self._icon.origin = (12,16)
 
     def setPosition(self,pos):
