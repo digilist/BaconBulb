@@ -65,6 +65,7 @@ class GameEngine():
 
     def loop(self):
         self._turn_on_light()
+        self._turn_off_lights()
         self._display_house()
         self._display_main_monster()
         self._display_meter()
@@ -85,6 +86,14 @@ class GameEngine():
             self._window_on_count = self._window_on_count - 1 if self._window_on_count > 1 else 1
 
         self._frame_count += 1
+
+    """ Turn off bulbs that were on for too long """
+    def _turn_off_lights(self):
+        for x in range (0, self._columns):
+            for y in range (0, self._rows):
+                if (self._windows[x][y]["status"] and (datetime.now()-self._windows[x][y]["create_time"]).seconds >= 9):
+                    self._create_window(x, y, False)
+
 
     """ Display the House with all Windows """
     def _display_house(self):
