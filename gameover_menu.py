@@ -26,19 +26,6 @@ class Gameover_menu():
         self._titletext_right.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2+1.5,50)
         self._titletext_down.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2,50+1.5)
         self._scoretext = sf.Text("Points "+str(self._game_menu._points), self._font, 50)
-        self._scoretext_left = sf.Text("Points "+str(self._game_menu._points), self._font, 50)
-        self._scoretext_up = sf.Text("Points "+str(self._game_menu._points), self._font, 50)
-        self._scoretext_right = sf.Text("Points "+str(self._game_menu._points), self._font, 50)
-        self._scoretext_down = sf.Text("Points "+str(self._game_menu._points), self._font, 50)
-        self._scoretext.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2,150)
-        self._scoretext_left.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2-1.5,150)
-        self._scoretext_up.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2,150-1.5)
-        self._scoretext_right.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2+1.5,150)
-        self._scoretext_down.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2,150+1.5)
-        self._scoretext_left.color = sf.Color.BLACK
-        self._scoretext_up.color = sf.Color.BLACK
-        self._scoretext_right.color = sf.Color.BLACK
-        self._scoretext_down.color = sf.Color.BLACK
         self._enternametext = sf.Text("Enter Name!", self._font, 50)
         self._enternametext_left = sf.Text("Enter Name!", self._font, 50)
         self._enternametext_up = sf.Text("Enter Name!", self._font, 50)
@@ -84,6 +71,19 @@ class Gameover_menu():
 
     def loop(self, background):
         self._scoretext.string = "Points " + str(self._game_menu._points)
+        self._scoretext_left = sf.Text("Points "+str(self._game_menu._points), self._font, 50)
+        self._scoretext_up = sf.Text("Points "+str(self._game_menu._points), self._font, 50)
+        self._scoretext_right = sf.Text("Points "+str(self._game_menu._points), self._font, 50)
+        self._scoretext_down = sf.Text("Points "+str(self._game_menu._points), self._font, 50)
+        self._scoretext.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2,150)
+        self._scoretext_left.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2-1.5,150)
+        self._scoretext_up.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2,150-1.5)
+        self._scoretext_right.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2+1.5,150)
+        self._scoretext_down.position = ((self._window.size[0]-self._titletext.local_bounds.size[0])/2,150+1.5)
+        self._scoretext_left.color = sf.Color.BLACK
+        self._scoretext_up.color = sf.Color.BLACK
+        self._scoretext_right.color = sf.Color.BLACK
+        self._scoretext_down.color = sf.Color.BLACK
         background.draw(self._window)
         self._window.draw(self._titletext_left)
         self._window.draw(self._titletext_up)
