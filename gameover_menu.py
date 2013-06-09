@@ -71,10 +71,16 @@ class Gameover_menu():
             self._nametext.string = ""
             self._game_menu._highscore.scorelist()
             self._game_menu.show_highscore()
-        if type(event) is sf.KeyEvent and event.pressed and event.code is sf.Keyboard.BACK_SPACE:
-            if not (len(self._name)==0):
-                self._name = self._name[:-1]
-                self._nametext.string = self._name
+        try:
+            if type(event) is sf.KeyEvent and event.pressed and event.code is sf.Keyboard.BACK_SPACE:
+                if not (len(self._name)==0):
+                    self._name = self._name[:-1]
+                    self._nametext.string = self._name
+        except AttributeError: 
+            if type(event) is sf.KeyEvent and event.pressed and event.code is sf.Keyboard.BACK:
+                if not (len(self._name)==0):
+                    self._name = self._name[:-1]
+                    self._nametext.string = self._name
 
 
     def mouse_listener(self, event):
