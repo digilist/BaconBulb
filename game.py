@@ -132,8 +132,11 @@ class GameEngine():
                     if(self._windows[x][y]["status"]):
                         self._window.draw(self._windows[x][y]["animating"])
                         if(self._windows[x][y]["hasBread"] == True):
-                            self._monster_sprite.position = self._windows[x][y]["window"].position
-                            self._window.draw(self._monster_sprite)
+                            if((datetime.now()-self._windows[x][y]["bread_creation_time"]).seconds >= 1):
+                                self._windows[x][y]["hasBread"] = False
+                            else:
+                                self._monster_sprite.position = self._windows[x][y]["window"].position
+                                self._window.draw(self._monster_sprite)
                         totalConsumption += self._windows[x][y]["energyConsumption"]
                     elif(not self._windows[x][y]["isDrawn"]):
                         self._window.draw(self._windows[x][y]["window"])
@@ -230,7 +233,8 @@ class GameEngine():
             "animating": None,
             "a_creation_time": datetime.now(),
             "isDrawn": False,
-            "hasBread": False
+            "hasBread": False,
+            "bread_creation_time": datetime.now()
         }
 
     def _spawn_rnd_monster(self):
@@ -244,6 +248,7 @@ class GameEngine():
             target = OnWindows.pop(random.randint(0, len(OnWindows) - 1))
             x, y = target[0], target[1]
             self._windows[x][y]["hasBread"] = True
+            self._windows[x][y]["bread_creation_time"] = datetime.now()
 
 
     # """ creates a animated window, which appears when the light was turned on """
