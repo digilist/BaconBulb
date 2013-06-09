@@ -63,7 +63,7 @@ class GameEngine():
         self._frame_count = 0
         self._window_on_count = 50
 
-        self._monster_texture = settings.monsterTexture
+        self._monster_texture = sf.Texture.from_file("assets/monster.png")
         self._monster_sprite = sf.Sprite(self._monster_texture)
 
         self._windows = {} # contains all windows with their current status
