@@ -13,6 +13,8 @@ class Startup():
 
     def __init__(self):
         self._window = sf.RenderWindow(sf.VideoMode(settings.windowWidth, settings.windowHeight), "BaconBulb")
+        self._window.vertical_synchronization = True
+        self._window.framerate_limit = 60
         self._window.mouse_cursor_visible = False
         self._cursor = Cursor(self._window)
         self._game_menu = GameMenu(self._window)

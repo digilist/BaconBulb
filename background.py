@@ -1,6 +1,7 @@
 import sfml as sf
 import random
 import math
+from datetime import datetime as dtime
 
 class Background():
     def __init__(self,window):
@@ -13,8 +14,6 @@ class Background():
             self._background[x].radius = self._radius[self._background[x]]
             self._background[x].position = (random.randint(0,self._window.size[0]),random.randint(0,self._window.size[1]))
             self._background[x].fill_color = sf.Color(random.randint(0,255),random.randint(0,255),random.randint(0,255))
-
-    #def close(self):
 
 
     def draw(self, target):
